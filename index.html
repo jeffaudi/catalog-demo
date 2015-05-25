@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--
+#
+# Copyright (C) 2015, Jeff Faudi <jeffaudi@gmail.com>, Airbus Defense and Space
+# 
+# Permission to use, copy, modify, and/or distribute this software for any purpose 
+# with or without fee is hereby granted, provided that the above copyright notice 
+# and this permission notice appear in all copies.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
+# FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM 
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, 
+# ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# http://www.isc.org/downloads/software-support-policy/isc-license/
+#
+-->
+<html>
+<head>
+	<title>Airbus Imagery Catalog Mobile App</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="robots" content="noindex" />
+
+    <!-- JQuery & JQuery Mobile CSS includes -->
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
+    <!-- Leaflet CSS includes -->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+    <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.ie.css" /><![endif]-->
+
+	<link rel="stylesheet" href="css/L.Control.Sidebar.css"> 
+	<link rel="stylesheet" href="css/main.css"> 
+</head>
+<body>
+	<div class="se-pre-con"></div>
+	<div id="container" data-role="page">
+		<div id="accordion" data-role="collapsible">
+			<h3><span id="title">Parameters</span></h3>
+			<div id="parameters">
+				<div class="field">
+					<label>Imagery type:</label>
+					<select id="image_type">
+						<option value="ps">Pleiades and SPOT6/7</option>
+						<option value="p">Pleiades</option>
+						<option value="s">SPOT 6/7</option>
+					</select>
+				</div>
+				<div class="field">
+					<label>Center map on:</label>
+				    <input class="textinput" type="text" id="location">
+				</div>
+				<div class="field">
+					<label>Max cloud (%):</label>
+					<input class="textinput" maxlength="3" size="3" type="text" id="cloud_cover" value="10">
+				</div>
+				<div class="field">
+					<label>Max angle (°):</label>
+					<input class="textinput" maxlength="2" size="2" type="text" id="incidence_angle" value="20">
+				</div>
+				<div class="field">
+					<label>Search last</label>
+					<select id="date_interval">
+						<option value="2w">2 weeks</option>
+						<option value="1m">month</option>
+						<option value="2m">2 months</option>
+						<option value="3m">3 months</option>
+						<option value="6m">6 months</option>
+						<option value="1y">year</option>
+						<option value="2y">2 years</option>
+						<option value="5y">5 years</option>
+					</select>
+				</div>
+				<div class="extra">
+					<label>&nbsp;</label>
+					<div data-role="controlgroup" data-type="horizontal">
+						<a id="download_ids" href="" data-role="button" class="ui-btn ui-corner-all">CSV</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="map" data-role="content">
+		</div>
+	</div>
+	<div id="sidebar">
+	    <h1>leaflet-sidebar</h1>
+	</div>
+
+    <!-- JQuery & JQuery Mobile JS includes -->
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <!-- Leaflet JS includes -->
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <!-- Leaflet Sidebar JS includes -->
+	<script src="js/L.Control.Sidebar.js"></script>
+
+    <!-- Main JS includes -->
+	<script src="js/main.js"></script>
+	<script>
+		// initialize app
+		$(document).ready(function($) {
+			initialize();
+		});
+	</script>  
+
+</body>
+</html>
+

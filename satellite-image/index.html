@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--
+#
+# Copyright (C) 2015, Jeff Faudi <jeffaudi@gmail.com>, Airbus Defense and Space
+# 
+# Permission to use, copy, modify, and/or distribute this software for any purpose 
+# with or without fee is hereby granted, provided that the above copyright notice 
+# and this permission notice appear in all copies.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
+# FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM 
+# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, 
+# ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# http://www.isc.org/downloads/software-support-policy/isc-license/
+#
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,maximum-scale=1.0" />
+    <title>Airbus DS Satellite Image</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <meta name="robots" content="noindex" />
+    <script>
+
+        // read URL parameters 
+        function getURLParameter(name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+        }
+
+        // initialize 
+        $(document).ready(function($) {
+
+            //$("#order").addClass('active');
+
+            var image_id = getURLParameter('id');
+            //var image_id = document.URL.split('?')[1].split('=')[1];
+            //alert("Image ID is " + image_id);
+
+            var ql_image = "http://ql2.astrium-geo.com/raw/" + image_id;
+            $( "#ql_image" ).attr('src', "ajax-loader.gif");
+            $( "#ql_image" ).attr('src', ql_image);
+            //$( "#preview" ).collapsible("expand");    
+            //$( "#infos" ).collapsible("expand");  
+
+            var url = 'http://api2.astrium-geo.com/id/' + image_id;
+            $.ajax({
+                dataType: "json",
+                url: url,
+                success: function( response ) {
+                    // check first for any error
+                    if (response['error'] === false) {
+                        // if there is at least one match
+                        if (response['found'] == 1) {
+                            var properties = response['properties'];
+                            console.log(properties)
+                            $( "#image-name" ).html(properties['id']);
+                            $( "#image-date" ).html(properties['acquisitionDate']);
+                            $( "#image-cloud" ).html(properties['cloudCover']);
+                            $( "#image-angle" ).html(properties['incidenceAngle']);
+                            $( "#image-resolution" ).html(properties['resolution']);
+                            $( "#image-satellite" ).html(properties['platform']);
+                            $( "#image-family" ).html(properties['instrument']);
+
+                            $( "#image-geometry" ).html(response['geometry']['coordinates']);
+                            $( "#image-station" ).html(properties['id']);
+                            $( "#image-ql" ).html('<a target="_blank" href=' + properties['quicklookUrl'] + '>Open link</a>');
+                            $( "#image-orientation" ).html(properties['orientationAngle']);
+                            $( "#image-snow" ).html(properties['snowCover']);
+                            $( "#image-azimuth" ).html(properties['illuminationAzimuthAngle']);
+                            $( "#image-elevation" ).html(properties['illuminationElevationAngle']);
+
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>  
+</head>
+<body>
+    
+<a id="order" href="" data-role="button" data-theme="b">Order this image!</a>	
+<div id="accordion" data-role="collapsible-set" data-theme="c" data-content-theme="d">
+    <div data-role="collapsible" data-collapsed="false" id="infos">
+        <h3>Enter your personal information</h3>
+		<div class="ui-grid-a  ui-responsive">
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Name</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-name"><input type="text"></div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Email</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-email"><input type="text"></div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Organization</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-organization"><input type="text"></div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Country</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-country"><input type="text"></div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Area of interest</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-area"><input type="text"></div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Comments</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="user-comments"><input type="text"></div></div>
+		</div>
+	</div>
+    <div data-role="collapsible" id="preview">
+        <h3>Click for image preview</h3>
+        <img id="ql_image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+    </div>
+    <div data-role="collapsible" data-collapsed="false" >
+        <h3>Image information</h3>
+		<div class="ui-grid-a  ui-responsive">
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Identifier</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-name">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Date</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-date">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Cloud Coverage</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-cloud">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Incidence Angle</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-angle">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Resolution</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-resolution">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Satellite</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-satellite">Loading...</div></div>
+            <div class="ui-block-a"><div class="ui-bar ui-bar-a">Sensor family</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-family">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Geometry</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-geometry">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Archiving Station</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-station">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Quick Look URL</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-ql">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Orientation Angle</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-orientation">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Snow Cover</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-snow">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Sun Azimuth</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-azimuth">Loading...</div></div>
+		    <div class="ui-block-a"><div class="ui-bar ui-bar-a">Sun Elevation</div></div><div class="ui-block-b"><div class="ui-body ui-body-a" id="image-elevation">Loading...</div></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
